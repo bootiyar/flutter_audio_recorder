@@ -128,7 +128,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
         handleStop(call, result);
         break;
       case "convert":
-        convertFileToMp3();
+        convertFileToMp3(call, result);
         break;
       default:
         result.notImplemented();
@@ -253,7 +253,6 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
       }
       Log.d(LOG_NAME, "before adding the wav header");
       copyWaveFile(getTempFilename(), mFilePath);
-      convertFileToMp3();
       deleteTempFile();
 
       // Log.d(LOG_NAME, currentResult.toString());
@@ -326,7 +325,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
     }
   }
 
-  private void convertFileToMp3(){
+  private void convertFileToMp3(MethodCall call,final Result result){
     Log.d("bootiyar", "convertFileToMp3");
     AndroidAudioConverter.load(registrar.context(), new ILoadCallback() {
       @Override
@@ -337,6 +336,8 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
           @Override
           public void onSuccess(File convertedFile) {
             Log.d("bootiyar", convertedFile.getAbsolutePath());
+            mStatus = "converted";
+            result.success(null);
           }
           @Override
           public void onFailure(Exception error) {
