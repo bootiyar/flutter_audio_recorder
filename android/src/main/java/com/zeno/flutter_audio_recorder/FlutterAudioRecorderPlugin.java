@@ -327,6 +327,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
   }
 
   private void convertFileToMp3(){
+    Log.d("bootiyar", "convertFileToMp3");
     AndroidAudioConverter.load(registrar.context(), new ILoadCallback() {
       @Override
       public void onSuccess() {
@@ -340,6 +341,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
           @Override
           public void onFailure(Exception error) {
             error.printStackTrace();
+            Log.d("bootiyar", "convertFileToMp3 error");
           }
         };
         AndroidAudioConverter.with(registrar.context())
@@ -359,6 +361,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
       public void onFailure(Exception error) {
         // FFmpeg is not supported by device
         error.printStackTrace();
+        Log.d("bootiyar", "FFmpeg is not supported by device");
       }
     });
 
