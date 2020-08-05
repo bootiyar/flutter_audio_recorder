@@ -115,6 +115,12 @@ class FlutterAudioRecorder {
     return _recording;
   }
 
+
+  /// Request currently [Paused] recording to continue
+  Future convert() async {
+    return _channel.invokeMethod('converted');
+  }
+
   /// Ask for current status of recording
   /// Returns the result of current recording status
   /// Metering level, Duration, Status...
