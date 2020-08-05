@@ -11,17 +11,7 @@ public class MainActivity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    AndroidAudioConverter.load(this, new ILoadCallback() {
-      @Override
-      public void onSuccess() {
-        // Great!
-      }
-      @Override
-      public void onFailure(Exception error) {
-        // FFmpeg is not supported by device
-        error.printStackTrace();
-      }
-    });
+
     GeneratedPluginRegistrant.registerWith(this);
   }
 }

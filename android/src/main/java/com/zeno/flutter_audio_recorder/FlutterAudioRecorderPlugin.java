@@ -327,29 +327,42 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
   }
 
   private void convertFileToMp3(){
-    File flacFile = new File(mFilePath);
-    IConvertCallback callback = new IConvertCallback() {
+    AndroidAudioConverter.load(registrar.context(), new ILoadCallback() {
       @Override
-      public void onSuccess(File convertedFile) {
-        Log.d("bootiyar",convertedFile.getAbsolutePath());
+      public void onSuccess() {
+        // Great!
+        File flacFile = new File(mFilePath);
+        IConvertCallback callback = new IConvertCallback() {
+          @Override
+          public void onSuccess(File convertedFile) {
+            Log.d("bootiyar", convertedFile.getAbsolutePath());
+          }
+          @Override
+          public void onFailure(Exception error) {
+            error.printStackTrace();
+          }
+        };
+        AndroidAudioConverter.with(registrar.context())
+          // Your current audio file
+          .setFile(flacFile)
+
+          // Your desired audio format
+          .setFormat(cafe.adriel.androidaudioconverter.model.AudioFormat.MP3)
+
+          // An callback to know when conversion is finished
+          .setCallback(callback)
+
+          // Start conversion
+          .convert();
       }
       @Override
       public void onFailure(Exception error) {
+        // FFmpeg is not supported by device
         error.printStackTrace();
       }
-    };
-    AndroidAudioConverter.with(registrar.context())
-      // Your current audio file
-      .setFile(flacFile)
+    });
 
-      // Your desired audio format
-      .setFormat(cafe.adriel.androidaudioconverter.model.AudioFormat.MP3)
 
-      // An callback to know when conversion is finished
-      .setCallback(callback)
-
-      // Start conversion
-      .convert();
   }
 
   private void WriteWaveFileHeader(FileOutputStream out, long totalAudioLen,
