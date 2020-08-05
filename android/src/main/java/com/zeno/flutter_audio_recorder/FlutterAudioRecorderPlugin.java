@@ -9,6 +9,8 @@ import android.os.Build.VERSION;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -22,6 +24,9 @@ import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
 
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -121,6 +126,9 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
         break;
       case "stop":
         handleStop(call, result);
+        break;
+      case "convert":
+        convertFileToMp3();
         break;
       default:
         result.notImplemented();
@@ -245,6 +253,7 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
       }
       Log.d(LOG_NAME, "before adding the wav header");
       copyWaveFile(getTempFilename(), mFilePath);
+      convertFileToMp3();
       deleteTempFile();
 
       // Log.d(LOG_NAME, currentResult.toString());
@@ -315,6 +324,32 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private void convertFileToMp3(){
+    File flacFile = new File(mFilePath);
+    IConvertCallback callback = new IConvertCallback() {
+      @Override
+      public void onSuccess(File convertedFile) {
+        Log.d("bootiyar",convertedFile.getAbsolutePath());
+      }
+      @Override
+      public void onFailure(Exception error) {
+        error.printStackTrace();
+      }
+    };
+    AndroidAudioConverter.with(registrar.context())
+      // Your current audio file
+      .setFile(flacFile)
+
+      // Your desired audio format
+      .setFormat(cafe.adriel.androidaudioconverter.model.AudioFormat.MP3)
+
+      // An callback to know when conversion is finished
+      .setCallback(callback)
+
+      // Start conversion
+      .convert();
   }
 
   private void WriteWaveFileHeader(FileOutputStream out, long totalAudioLen,
