@@ -337,11 +337,6 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
           public void onSuccess(File convertedFile) {
             Log.d("bootiyar", convertedFile.getAbsolutePath());
             mStatus = "converted";
-            HashMap<String, Object> currentResult = new HashMap<>();
-            currentResult.put("duration", getDuration() * 1000);
-            currentResult.put("path", convertedFile.getAbsolutePath());
-            currentResult.put("status", mStatus);
-            result.success(null);
           }
           @Override
           public void onFailure(Exception error) {
