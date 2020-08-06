@@ -129,7 +129,7 @@ class FlutterAudioRecorder {
 
     var result = await _channel.invokeMethod('current', {"channel": channel});
 
-    if (result != null && _recording?.status != RecordingStatus.Stopped) {
+    if (result != null && _recording?.status != RecordingStatus.Stopped && _recording?.status != RecordingStatus.Converted) {
       response = Map.from(result);
       _responseToRecording(response);
     }
