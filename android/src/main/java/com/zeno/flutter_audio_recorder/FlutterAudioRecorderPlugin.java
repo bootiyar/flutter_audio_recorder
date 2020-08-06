@@ -335,8 +335,17 @@ public class FlutterAudioRecorderPlugin implements MethodCallHandler, PluginRegi
         IConvertCallback callback = new IConvertCallback() {
           @Override
           public void onSuccess(File convertedFile) {
-            Log.d("bootiyar", convertedFile.getAbsolutePath());
+            Log.d("bootiyar_", convertedFile.getAbsolutePath());
             mStatus = "converted";
+            HashMap<String, Object> currentResult = new HashMap<>();
+            currentResult.put("duration", getDuration() * 1000);
+            currentResult.put("path", mFilePath);
+            currentResult.put("audioFormat", mExtension);
+            currentResult.put("peakPower", mPeakPower);
+            currentResult.put("averagePower", mAveragePower);
+            currentResult.put("isMeteringEnabled", true);
+            currentResult.put("status", mStatus);
+            result.success(currentResult);
           }
           @Override
           public void onFailure(Exception error) {
